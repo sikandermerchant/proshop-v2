@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Row, Col, Image, ListGroup, Button, Card } from "react-bootstrap";
 import Rating from "../components/Rating";
 // import products from "../products";
-import axios from "axios";
+// import axios from "axios";
+import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 
 const ProductScreen = () => {
   const { id: productID } = useParams();
-  const [product, setProduct] = useState({});
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const { data } = await axios.get(`/api/products/${productID}`);
-        setProduct(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching the product:", error);
-      }
-    };
+  // const [product, setProduct] = useState({});
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     try {
+  //       const { data } = await axios.get(`/api/products/${productID}`);
+  //       setProduct(data);
+  //       console.log(data);
+  //     } catch (error) {
+  //       console.error("Error fetching the product:", error);
+  //     }
+  //   };
 
-    fetchProduct();
-  }, [productID]);
-  
+  //   fetchProduct();
+  // }, [productID]);
+  const { data: product, error, isLoading } = useGetProductDetailsQuery(productID);
   return (
     <>
       <Link className='btn btn-light my-3'
         to='/'>
         Go Back
       </Link>
-      <Row>
+      {isLoading ? (
+        <h2>Loading...</h2>
+      ) : error ? (
+        <div>{error?.data?.message || error?.message || 'An error occured'}</div>
+      ) :
+      (
+        <Row>
         <Col md={5}>
           <Image src={product.image} alt={product.name} fluid />
         </Col>
@@ -81,6 +88,8 @@ const ProductScreen = () => {
           </Card>
         </Col>
       </Row>
+      )}
+      
     </>
   )
 }
