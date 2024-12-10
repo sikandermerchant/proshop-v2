@@ -5,6 +5,8 @@ import Product from '../components/Product'
 //import products from '../products' // data/products.js file fetching data from frontend
 //This will not be needed as we will be fetching data from backend using Redux Toolkit Query
 // import axios from 'axios'
+import Loader from '../components/Loader'
+import Message from '../components/Message'
 import { useGetProductsQuery } from '../slices/productsApiSlice'
 
 
@@ -30,9 +32,9 @@ const HomeScreen = () => {
   return (
     <>
       {isLoading ? (
-        <h2>Loading...</h2>
+        <Loader/>
       ) : error ? (
-          <div>{error?.data?.message || error?.message || 'An error occured'}</div>
+          <Message variant='danger'>{error?.data?.message || error?.message || 'An error occured'}</Message>
         ):(
             <>
               <h1>Latest Products</h1>

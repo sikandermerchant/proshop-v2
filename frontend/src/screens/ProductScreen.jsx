@@ -5,6 +5,8 @@ import { Row, Col, Image, ListGroup, Button, Card } from "react-bootstrap";
 import Rating from "../components/Rating";
 // import products from "../products";
 // import axios from "axios";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 
 const ProductScreen = () => {
@@ -30,10 +32,11 @@ const ProductScreen = () => {
         to='/'>
         Go Back
       </Link>
+      
       {isLoading ? (
-        <h2>Loading...</h2>
+        <Loader />
       ) : error ? (
-        <div>{error?.data?.message || error?.message || 'An error occured'}</div>
+        <Message variant='danger'>{error?.data?.message || error?.message || 'An error occured'}</Message>
       ) :
       (
         <Row>
