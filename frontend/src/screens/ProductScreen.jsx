@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Form, Row, Col, Image, ListGroup, Button, Card } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"; //import the useDispatch hook from react-redux. This hook allows us to dispatch actions which are functions that return objects. In this case we are using it to dispatch the addToCart action.
 import Rating from "../components/Rating";
 // import products from "../products";
 // import axios from "axios";

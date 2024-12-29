@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { updateCart } from "../utils/cartUtils";
 
+//Create an initial state for the cart to check if there is a cart in the local storage, if not, set the cart to an empty array and if there is a cart in the local storage, set the cart to the cart in the local storage with JSON.parse to convert the string to an object. The cart here is an object with cartItems as an array. CartItems is an array of items in the cart which has the product information.
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
   : { cartItems: [] };
@@ -43,5 +44,7 @@ const cartSlice = createSlice({
   }
 })
 
+//Export the addToCart function
 export const { addToCart } = cartSlice.actions;
+//Export the cart reducer which will be used in the store to update the state every time the addToCart function is called. This reducer will update the state of the cart with the new item added to the cart and is a mutable operation.
 export default cartSlice.reducer;
