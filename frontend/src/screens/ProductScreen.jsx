@@ -44,7 +44,7 @@ const ProductScreen = () => {
     //dispatch the addToCart action with the product and quantity coming from the state using the dispatch function
     dispatch(addToCart({ ...product, qty }));
     //redirect to the cart page
-    navigate('/cart ');
+    navigate('/cart');
   };
   return (
     <>
