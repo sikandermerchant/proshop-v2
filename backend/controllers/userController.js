@@ -1,6 +1,7 @@
 //Similar to productController.js, we will create a new controller file for user related operations.
 //Here we will create a new file called userController.js inside the controllers folder.
 //For this we will import the User model and asyncHandler.
+import { set } from 'mongoose';
 import asyncHandler from '../middleware/asyncHandler.js';
 import User from '../models/userModel.js';
 //Now we bring in the generateToken function from the utils folder. This will be used to generate a token when the user logs in and also when the user registers and then is automatically logged in after registration.
@@ -78,7 +79,7 @@ const authUser = asyncHandler(async (req, res) => {
     //Earlier we had a function called generateToken which we have moved to the generateToken.js file in the utils folder. We will now import this function here.
     //Here we call the generateToken function which we have created in the utils folder. This function will generate a token and set it in the cookie.
     generateToken(res, user._id);
-    res.json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -115,7 +116,21 @@ const logoutUser = asyncHandler(async (req, res) => {
 //@access Private
 
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.send("get user profile");
+  // res.send("get user profile");
+  //Here we will get the user by id which is available in the request object as req.user._id. If logged in the user id will be available in the request object. 
+  const user = await User.findById(req.user._id);
+  //We will return the user object as a response. Here we check if the user exists and return the user object.
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
 });
 
 //5. Update user profile - here we are not using the id as we will updating the user using the token. Users will have access to their own profile data only using a JWT token.
@@ -124,7 +139,34 @@ const getUserProfile = asyncHandler(async (req, res) => {
 //@access Private
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send("update user profile");
+  // res.send("update user profile");
+  //Here we will update the user profile.
+  //First we will get the user by id which is available in the request object as req.user._id. If logged in the user id will be available in the request object.
+  const user = await User.findById(req.user._id);
+  //We will check if the user exists and then update the user.
+  if (user) {
+    //We will update the user name and email if they are available in the request body.
+    //If the name is available in the request body, we will update the user name. If the name is not available, we will keep the existing name.
+    user.name = req.body.name || user.name;
+    //If the email is available in the request body, we will update the user email. If the email is not available, we will keep the existing email.
+    user.email = req.body.email || user.email;
+    //If the password is available in the request body, we will update the user password. If the password is not available, we will keep the existing password. We do it this was as the password is encrypted and we do not want to update the password if it is not available.
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+    //We will save the updated user.
+    const updatedUser = await user.save();
+    //We will return the updated user as a response.
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
 });
 
 //6. Get all users
