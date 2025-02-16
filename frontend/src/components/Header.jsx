@@ -1,16 +1,24 @@
-import { Navbar, Nav, Container, Badge } from 'react-bootstrap';
+import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import {useSelector} from 'react-redux'; // useSelector is a hook to extract data from the Redux store state, using a selector function. In this case, we are using it to get the cart state from the Redux store.
 import logo from '../assets/logo.png';
+import { use } from 'react';
 
 const Header = () => { 
   //using the useSelector hook to get the cart state from the Redux store. Here we have destructured the cartItems from the state so we can use it directly in the component. The cart in state.cart refers to the cart slice in the Redux store which we can see in our store.js file where there is a reducer for the cart slice which is cartSliceReducer and that is what we are accessing here. We can access any of cartItems like shippingAddress, paymentMethod, etc. from the cart state.
   const { cartItems } = useSelector(state => state.cart); //get the cart state from the Redux store using the useSelector hook
+  const { userInfo } = useSelector(state => state.auth); //get the user info from the Redux store using the useSelector hook
+  //we will get the userInfo from the Redux store using the useSelector hook. We will use this to display the user's name in the Navbar. We will also use this to display the user's name in the dropdown menu in the Navbar. We will use the userInfo object to get the user's name. userInfo will contain the user's information. If the user is already logged in, userInfo will be an object with the user's information. If the user is not logged in, userInfo will be null. You can see this in the redux dev tools.
   //This console.log statement will log the cartItems to the console whenever the Header component is rendered
   console.log(cartItems)
   //Now that we have the cartItems from the Redux store, we can use it to display the number of items in the cart in the Navbar. We can do this by using the length property of the cartItems array. We will display the number of items in the cart in the Navbar by adding a Badge which is a small circle with the number of items in the cart available in React Bootstrap. This will be done in the Cart Nav.Link in the Navbar.
   // As we can see using conditional rendering, we are checking if the length of the cartItems array is greater than 0 and if it is, we are displaying a span with the class badge and the number of items in the cartItems array. This will display the number of items in the cart in the Navbar. If 0 items are in the cart, the badge will not be displayed.
+  //We will also create a logoutHandler function that will dispatch the logout action from the authSlice.js. This will remove the user's information from the state and local storage. We will call this function when the user clicks on the logout button in the dropdown menu in the Navbar.
+  const logoutHandler = () => {
+    //for now we will just console.log logout
+    console.log('logout')
+  }
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
@@ -53,11 +61,25 @@ const Header = () => {
 
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/login'>
-                <Nav.Link>
-                  <FaUser /> Sign In
-                </Nav.Link>
-              </LinkContainer>
+              {userInfo ?
+                (
+                  <NavDropdown title={userInfo.name} id='username'>
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>
+                        Profile
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                      <NavDropdown.Item onClick={logoutHandler}>
+                        Logout
+                      </NavDropdown.Item>
+                  </NavDropdown>
+                ):
+                  (<LinkContainer to = '/login'>
+                  <Nav.Link>
+                    <FaUser /> Sign In
+                  </Nav.Link>
+                </LinkContainer>)}
+                
             </Nav>
           </Navbar.Collapse>
         </Container>
