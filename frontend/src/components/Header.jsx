@@ -1,9 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
-import {useSelector} from 'react-redux'; // useSelector is a hook to extract data from the Redux store state, using a selector function. In this case, we are using it to get the cart state from the Redux store.
+import { useSelector, useDispatch } from 'react-redux'; // useSelector is a hook to extract data from the Redux store state, using a selector function. In this case, we are using it to get the cart state from the Redux store. useDispatch is a hook to dispatch actions to the Redux store. We will use it to dispatch the logout action from the authSlice.js when the user clicks on the logout button in the dropdown menu in the Navbar.
+import { useLogoutMutation } from '../slices/usersApiSlice';
+import { logout } from '../slices/authSlice';
 import logo from '../assets/logo.png';
-import { use } from 'react';
+
+
 
 const Header = () => { 
   //using the useSelector hook to get the cart state from the Redux store. Here we have destructured the cartItems from the state so we can use it directly in the component. The cart in state.cart refers to the cart slice in the Redux store which we can see in our store.js file where there is a reducer for the cart slice which is cartSliceReducer and that is what we are accessing here. We can access any of cartItems like shippingAddress, paymentMethod, etc. from the cart state.
@@ -15,9 +19,24 @@ const Header = () => {
   //Now that we have the cartItems from the Redux store, we can use it to display the number of items in the cart in the Navbar. We can do this by using the length property of the cartItems array. We will display the number of items in the cart in the Navbar by adding a Badge which is a small circle with the number of items in the cart available in React Bootstrap. This will be done in the Cart Nav.Link in the Navbar.
   // As we can see using conditional rendering, we are checking if the length of the cartItems array is greater than 0 and if it is, we are displaying a span with the class badge and the number of items in the cartItems array. This will display the number of items in the cart in the Navbar. If 0 items are in the cart, the badge will not be displayed.
   //We will also create a logoutHandler function that will dispatch the logout action from the authSlice.js. This will remove the user's information from the state and local storage. We will call this function when the user clicks on the logout button in the dropdown menu in the Navbar.
-  const logoutHandler = () => {
+
+  const dispatch = useDispatch(); //use the useDispatch hook to dispatch actions to the Redux store
+  const navigate = useNavigate(); //use the useNavigate hook to navigate to different pages in our application
+  //The useLogoutMutation hook will return an array with the logout function. We will destructure the logout function from the array. The logout function will send a POST request to the /logout endpoint. This will destroy the cookie in the backend server. We will call this function when the user clicks on the logout button in the dropdown menu in the Navbar.
+  const [logoutUser] = useLogoutMutation(); //call the useLogoutMutation hook to get the logout function
+  //The logout handler will be async and will call the logout function from the usersApiSlice.js. This will send a POST request to the /logout endpoint. This will destroy the cookie in the backend server. We will then dispatch the logout action from the authSlice.js to remove the user's information from the state and local storage. We will call this function when the user clicks on the logout button in the dropdown menu in the Navbar.
+  const logoutHandler = async () => {
     //for now we will just console.log logout
     console.log('logout')
+    try {
+      //When the user clicks on the logout button in the dropdown menu in the Navbar, we will call logoutUser from the usersApiSlice.js. logoutUser is a function that will send a POST request to the /logout endpoint. This will destroy the cookie in the backend server. We will then await the response from the logoutUser function. The response will be empty. We will then dispatch the logout action from the authSlice.js to remove the user's information from the state and local storage. We will call this function when the user clicks on the logout button in the dropdown menu in the Navbar.
+      //Since it returns a promise, we will await the response from the logoutUser function. The response will be empty. We will then dispatch the logout action from the authSlice.js to remove the user's information from the state and local storage. The unwrap function is always used with the async/await syntax. It will return the data from the response if the request is successful. If the request is unsuccessful, it will throw an error. We will use this to get the data from the response of the logoutUser function.
+      await logoutUser().unwrap();
+      dispatch(logout());
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <header>

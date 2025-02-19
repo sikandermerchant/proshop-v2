@@ -12,8 +12,15 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    //Next we will create an endpoint to logout the user. This will be a simple query endpoint that will send a POST request to the /logout endpoint. That is how we will destroy the cookie in the backend server by sending a POST request to the /logout endpoint. This will then call the logout action from the authSlice.js to remove the user's information from the state and local storage.
+    logout: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/logout`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
 //This is a convention to export the hooks of the endpoints with use{EndpointName}Mutation
-export const { useLoginMutation } = usersApiSlice;
+export const { useLoginMutation, useLogoutMutation } = usersApiSlice;
