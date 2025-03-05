@@ -2,9 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { updateCart } from "../utils/cartUtils";
 
 //Create an initial state for the cart to check if there is a cart in the local storage, if not, set the cart to an empty array and if there is a cart in the local storage, set the cart to the cart in the local storage with JSON.parse to convert the string to an object. The cart here is an object with cartItems as an array. CartItems is an array of items in the cart which has the product information.
+//We will also add shippingAddress and paymentMethod to the cart state to store the shipping address and payment method of the user. The shippingAddress is an object with address, city, postal code, country, and paymentMethod is a string with the payment method of the user.
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [] };
+  : { cartItems: [], shippingAddress: {}, paymentMethod: "PayPal" };
 
 //moved to utils.js
 // const addDecimals = (num) => {
@@ -63,10 +64,16 @@ const cartSlice = createSlice({
       //  localStorage.setItem("cart", JSON.stringify(state)); //save the cart to local storage
       return updateCart(state); //return the updated state
     },
+
+   //Here 
+    saveShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload; //save the shipping address to the state
+      return updateCart(state); //return the updated state
+    },
   }
 })
 
 //Export the addToCart, removeFromCart function
-export const { addToCart, removeFromCart} = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
 //Export the cart reducer which will be used in the store to update the state every time the addToCart function is called. This reducer will update the state of the cart with the new item added to the cart and is a mutable operation.
 export default cartSlice.reducer;
