@@ -33,7 +33,9 @@ const Header = () => {
       //Since it returns a promise, we will await the response from the logoutUser function. The response will be empty. We will then dispatch the logout action from the authSlice.js to remove the user's information from the state and local storage. The unwrap function is always used with the async/await syntax. It will return the data from the response if the request is successful. If the request is unsuccessful, it will throw an error. We will use this to get the data from the response of the logoutUser function.
       await logoutUser().unwrap();
       dispatch(logout());
-      navigate('/login');
+      setTimeout(() => {
+        navigate('/login');  // ✅ Delay navigation to prevent UI freeze
+      }, 100);
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +84,7 @@ const Header = () => {
               </LinkContainer>
               {userInfo ?
                 (
-                  <NavDropdown title={userInfo.name} id='username'>
+                  <NavDropdown title={userInfo?.name || 'Account'} id='username'>
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>
                         Profile

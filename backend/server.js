@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -15,6 +16,8 @@ connectDB(); // Connect to MongoDB
 const app = express();
 //Body parser middleware - here we have two app.use() functions. The first one is used to parse JSON data that is sent in the request.
 // The second one is used to parse URL-encoded data. This is used to parse data that is sent in the URL. The extended option is set to true. This is used to parse nested objects in the URL-encoded data. If the extended option is set to false, only strings and arrays can be parsed. The extended option is set to true by default. For example, if the extended option is set to true, the following data can be parsed: name=John&age=30&address[city]=New+York&address[state]=NY. If the extended option is set to false, only the following data can be parsed: name=John&age=30. In our case  { email: 'john@email.com', password: '123456' } will be returned, if we set that data up in Postman to have body in x-www-form-urlencoded.
+//Here we are using the cors middleware. This is used to enable CORS for all requests. CORS stands for Cross-Origin Resource Sharing. It is a security feature that restricts what resources a web page can request from another domain. This is used to prevent malicious websites from stealing data from other websites. By enabling CORS, we are allowing requests from other domains to access our API. This is useful when we are developing a frontend application that needs to access our API. By enabling CORS, we are allowing requests from other domains to access our API. This is useful when we are developing a frontend application that needs to access our API.
+app.use(cors()); // Enable CORS for all requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //Cookie parser middleware - here we are using the cookie-parser middleware

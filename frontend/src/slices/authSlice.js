@@ -20,10 +20,16 @@ const authSlice = createSlice({
     //Here we will add the reducer for logout. This reducer will take in the state and set the userInfo object to null. We will also remove the user's information from the local storage. We will call this reducer when the user logs out. We will first call logout from the usersApiSlice.js which will send a POST request to the /logout endpoint. This will destroy the cookie in the backend server. We will then call the logout action from the authSlice.js to remove the user's information from the state and local storage.
     //So this is for the localstorage and the state. While the logout function in the usersApiSlice.js is for the backend server.
     //We will import both this and the logout function from the usersApiSlice.js in the Header component and call the logout function when the user clicks on the logout button in the dropdown menu in the Navbar.
-    logout: (state, action) => {
-      state.userInfo = null;
-      localStorage.removeItem('userInfo');
+    logout: (state) => {
+      Object.keys(state).forEach((key) => {
+        state[key] = undefined; // ✅ Clears all Redux state
+      });
+    
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.reload();  // ✅ Ensures UI updates fully
     }
+    
   }
 })
 
