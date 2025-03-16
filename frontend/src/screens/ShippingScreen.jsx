@@ -4,6 +4,7 @@ import FormContainer from '../components/FormContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { saveShippingAddress } from '../slices/cartSlice'
+import CheckoutSteps from '../components/CheckoutSteps'
 
 const ShippingScreen = () => {
   //Here we are calling the cart from the cart slice. The destructured object will contain the cart information.
@@ -35,6 +36,7 @@ const ShippingScreen = () => {
   }
   return (
     <FormContainer>
+      <CheckoutSteps step1 step2 />
       <h1>
         Shipping
       </h1>

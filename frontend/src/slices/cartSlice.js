@@ -65,15 +65,24 @@ const cartSlice = createSlice({
       return updateCart(state); //return the updated state
     },
 
-   //Here 
+   //Here we have the saveShippingAddress function which takes the state and the action as parameters. The action has the shipping address as the payload. We set the shipping address in the state to the payload. We then calculate the item price, shipping price, tax price, and total price of the cart using the updateCart function from the cartUtils.js file. We then save the cart to the local storage and return the updated state.
+   //The saveShippingAddress function is an action that will take in the state and the action as parameters. The action will have the shipping address as the payload. We will set the shippingAddress object in the state to the payload.
+   //We then calculate the item price, shipping price, tax price, and total price of the cart using the updateCart function from the cartUtils.js file. In this function we calculate the item price, shipping price, tax price, and total price of the cart by using the reduce function to calculate the total price of the cart, the shipping price is 0 if the total price is greater than 100, else it is 10, the tax price is 15% of the total price, and the total price is the sum of the item price, shipping price, and tax price. We also use the addDecimals function to round the total price to 2 decimal places.
+   //We then save the cart to the local storage and return the updated state.
     saveShippingAddress: (state, action) => {
       state.shippingAddress = action.payload; //save the shipping address to the state
+      return updateCart(state); //return the updated state
+    },
+    //Here we have the savePaymentMethod function which takes the state and the action as parameters. The action has the payment method as the payload. We set the payment method in the state to the payload.
+    //The savePaymentMethod function is an action that will take in the state and the action as parameters. The action will have the payment method as the payload. We will set the paymentMethod object in the state to the payload. We then return the updated state using the updateCart function from the cartUtils.js file.
+    savePaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload; //save the payment method to the state
       return updateCart(state); //return the updated state
     },
   }
 })
 
 //Export the addToCart, removeFromCart function
-export const { addToCart, removeFromCart, saveShippingAddress } = cartSlice.actions;
+export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
 //Export the cart reducer which will be used in the store to update the state every time the addToCart function is called. This reducer will update the state of the cart with the new item added to the cart and is a mutable operation.
 export default cartSlice.reducer;
