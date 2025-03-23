@@ -79,10 +79,21 @@ const cartSlice = createSlice({
       state.paymentMethod = action.payload; //save the payment method to the state
       return updateCart(state); //return the updated state
     },
+    //Here we have the clearCartItems function which takes the state as a parameter. We set the cartItems in the state to an empty array. We then calculate the item price, shipping price, tax price, and total price of the cart using the updateCart function from the cartUtils.js file. We then save the cart to the local storage and return the updated state.
+    clearCartItems: (state) => { 
+      state.cartItems = []; //clear the cart items
+      return updateCart(state); //return the updated
+    }
   }
 })
 
 //Export the addToCart, removeFromCart function
-export const { addToCart, removeFromCart, saveShippingAddress, savePaymentMethod } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  saveShippingAddress,
+  savePaymentMethod,
+  clearCartItems
+} = cartSlice.actions;
 //Export the cart reducer which will be used in the store to update the state every time the addToCart function is called. This reducer will update the state of the cart with the new item added to the cart and is a mutable operation.
 export default cartSlice.reducer;

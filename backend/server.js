@@ -6,10 +6,12 @@ dotenv.config();
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
-const port = process.env.PORT || 5002;
 import productRoutes from './routes/productRoutes.js';
 //Now we will import the userRoutes.js file in server.js.
 import userRoutes from './routes/userRoutes.js';
+//We will now import the orderRoutes.js file in server.js.
+import orderRoutes from './routes/orderRoutes.js';
+const port = process.env.PORT || 5002;
 
 connectDB(); // Connect to MongoDB
 //here we create an instance of express and store it in the app variable. We then create a route for the home page that sends a response to the client. The response is the string 'API is running...'. This is a simple way to check if the server is running. If the server is running, the client will see this message when they visit the home page.
@@ -29,6 +31,8 @@ app.get('/', (req, res) => {
 app.use('/api/products', productRoutes);
 //We will now use the userRoutes in the server.js file. What we are doing here is using the userRoutes for all the routes that start with /api/users. So, if the user sends a request to /api/users, the userRoutes will handle the request. app.use is a function in express js that is used to mount the specified middleware function or functions at the specified path. In this case, we are mounting the userRoutes at the path /api/users.
 app.use('/api/users', userRoutes);
+//We will now use the orderRoutes in the server.js file. What we are doing here is using the orderRoutes for all the routes that start with /api/orders. So, if the user sends a request to /api/orders, the orderRoutes will handle the request. app.use is a function in express js that is used to mount the specified middleware function or functions at the specified path. In this case, we are mounting the orderRoutes at the path /api/orders.
+app.use('/api/orders', orderRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
