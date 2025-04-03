@@ -12,8 +12,15 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
         body: {...order},
       }),
     }),
+    getOrderDetails: builder.query({
+      query: (orderId) => ({
+        url: `${ORDERS_URL}/${orderId}`,
+        method: 'GET',
+      }),
+      keepUnusedDataFor: 5,
+    }),
   }),
 });
 
 // We will now export the useCreateOrderMutation hook. This hook will be used to create a new order. The useCreateOrderMutation hook will return a tuple with an object and a function. The object will contain the status of the mutation and the data returned by the mutation. The function will be used to trigger the mutation. The useCreateOrderMutation hook will be used in the OrderScreen component to create a new order.
-export const { useCreateOrderMutation } = ordersApiSlice;
+export const { useCreateOrderMutation, useGetOrderDetailsQuery } = ordersApiSlice;
