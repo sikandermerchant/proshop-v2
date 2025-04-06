@@ -33,6 +33,11 @@ app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 //We will now use the orderRoutes in the server.js file. What we are doing here is using the orderRoutes for all the routes that start with /api/orders. So, if the user sends a request to /api/orders, the orderRoutes will handle the request. app.use is a function in express js that is used to mount the specified middleware function or functions at the specified path. In this case, we are mounting the orderRoutes at the path /api/orders.
 app.use('/api/orders', orderRoutes);
+//Here we are using the paypal client id in the server.js file from the .env file. We are using the process.env.PAYPAL_CLIENT_ID to get the client id from the .env file. The client id is used to authenticate the user with the paypal API thus accessing the PAYPAL API
+// We are sending the client id as a response to the client when they send a request to /api/config/paypal. This is used to get the client id from the server. The client id is used to authenticate the user with the paypal API
+app.get('/api/config/paypal', (req, res) =>
+  res.send({ clientId: process.env.PAYPAL_CLIENT_ID})
+);
 app.use(notFound);
 app.use(errorHandler);
 

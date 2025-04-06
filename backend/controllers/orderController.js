@@ -73,7 +73,27 @@ const getOrderById = asyncHandler(async (req, res) => {
 //@route PUT /api/orders/:id/pay
 //@access Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  res.send('update order to paid');
+  // res.send('update order to paid');
+  //First we are getting the order by id. 
+  const order = await Order.findById(req.params.id);
+  //Then we are checking if the order is found. If the order is found, we are updating the order to paid. We are setting the isPaid to true, paidAt to the current date and time, and paymentResult to the payment result from the request body. The payment result contains the id, status, update_time, and email_address. The id is the id of the payment, status is the status of the payment, update_time is the time when the payment was updated, and email_address is the email address of the user who made the payment.
+  // We are saving the updated order and sending it as a response in JSON format with a status code of 200.
+  // If the order is not found, we are sending a response with a status code of 404 and an error message.
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_address: req.body.email_address
+    };
+    const updatedOrder = await order.save();
+    res.status(200).json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
 });
 
 //@desc Update order to delivered
